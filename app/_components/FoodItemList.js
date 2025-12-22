@@ -16,35 +16,57 @@ const FoodItemList = () => {
         // console.log(restaurantData);
 
         const resto_id = restaurantData._id;
-        console.log(restaurantData._id);
+        // console.log(resto_id);
 
-        let response = await fetch("http://localhost:3000/api/restaurant/foods/" + resto_id)
+        let response = await fetch('http://localhost:3000/api/restaurant/foods/' + resto_id)
+
         response = await response.json();
         // console.log(response);
 
         if (response.success) {
             setFoodItems(response.result)
+            // console.log(response);   
+
         } else {
             alert("not loading bhai kuch galat h.")
         }
 
     }
 
-    const deleteFoodItem = async function (id) {
-        let response = await fetch('http://localhost:3000/api/restaurant/foods/' + id, {
-            method: 'delete'
-        });
-        response = await response.json();
-        console.log(response);
+    const deleteFoodItem = async (id) => {
+        console.log("Deleting item id:", id, "type:", typeof id);
 
-        if (response.success) {
-            loadFoodItems();
-        } else {
-            console.log('food item not deleted');
+        const url = `http://localhost:3000/api/restaurant/foods/${id}`;
+        console.log("DELETE URL:", url);
 
-        }
+        let response = await fetch(url, { method: "DELETE" });
+        const data = await response.json();
 
-    }
+        console.log("DELETE response:", data);
+
+        if (data.success) loadFoodItems();
+        else console.log("food item not deleted");
+    };
+
+    // const deleteFoodItem = async function (id) {
+    //     console.log("ye h eski id" + id);
+
+    //     let response = await fetch(`http://localhost:3000/api/restaurant/foods/${id}`, {
+    //         method: 'DELETE'
+    //     });
+    //     response = await response.json();
+    //     console.log(response);
+    //     // console.log('yaha');
+
+
+    //     if (response.success) {
+    //         loadFoodItems();
+    //     } else {
+    //         console.log('food item not deleted');
+
+    //     }
+
+    // }
 
     return (
         <div>

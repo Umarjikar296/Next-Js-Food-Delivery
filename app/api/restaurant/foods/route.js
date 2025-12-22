@@ -10,6 +10,7 @@ export async function POST(request) {
         let success = false
         await mongoose.connect(connectionStr, { useNewUrlParser: true })
         const food = new foodSchema(payload);
+
         const result = await food.save();
         if (result) {
             success = true
@@ -19,3 +20,6 @@ export async function POST(request) {
         return NextResponse.json({ success: false, error: error.message });
     }
 }
+
+// old version
+
