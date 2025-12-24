@@ -43,7 +43,7 @@ export default function Home() {
           <ul className='location-list'>
             {
               showLocation && locations.map((item) => (
-                <li onClick={() => handleListItem(item)}>{item}</li>
+                <li key={item} onClick={() => handleListItem(item)}>{item}</li>
               ))
             }
           </ul>
