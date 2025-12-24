@@ -5,47 +5,48 @@ import { useEffect } from "react";
 const FoodItemList = () => {
 
     const [foodItems, setFoodItems] = useState()
+    const [restoId, setRestoId] = useState(null);
     const router = useRouter()
 
+    // useEffect(() => {
+    //     loadFoodItems();
+    // }, []);
+
+
+    // const loadFoodItems = async (id) => {
+    //     const res = await fetch(`/api/restaurant/foods/${id}`, { cache: "no-store" });
+    //     const data = await res.json();
+
+    //     if (data.success) {
+    //         setFoodItems(data.result);
+    //     } else {
+    //         alert("not loading");
+    //     }
+    // };
+
     useEffect(() => {
-        loadFoodItems();
+        const restaurantData = JSON.parse(localStorage.getItem("restaurantUser"));
+        setRestoId(restaurantData?._id || null);
     }, []);
 
-    const loadFoodItems = async () => {
-        const restaurantData = JSON.parse(localStorage.getItem('restaurantUser'));
-        // console.log(restaurantData);
+    useEffect(() => {
+        if (!restoId) return;
 
-        const resto_id = restaurantData._id;
-        // console.log(resto_id);
+        setFoodItems([]); // ✅ immediately clear old restaurant items
+        loadFoodItems(restoId);
+    }, [restoId]);
 
-        let response = await fetch('http://localhost:3000/api/restaurant/foods/' + resto_id)
+    const loadFoodItems = async (id) => {
+        let res = await fetch(`/api/restaurant/foods/${id}`, { cache: "no-store" });
+        const data = await res.json();
 
-        response = await response.json();
-        // console.log(response);
-
-        if (response.success) {
-            setFoodItems(response.result)
-            // console.log(response);   
-
-        } else {
-            alert("not loading bhai kuch galat h.")
-        }
-
-    }
+        if (data.success) setFoodItems(data.result);
+    };
 
     const deleteFoodItem = async (id) => {
-        console.log("Deleting item id:", id, "type:", typeof id);
-
-        const url = `http://localhost:3000/api/restaurant/foods/${id}`;
-        console.log("DELETE URL:", url);
-
-        let response = await fetch(url, { method: "DELETE" });
-        const data = await response.json();
-
-        console.log("DELETE response:", data);
-
-        if (data.success) loadFoodItems();
-        else console.log("food item not deleted");
+        const res = await fetch(`/api/restaurant/foods/${id}`, { method: "DELETE" });
+        const data = await res.json();
+        if (data.success) loadFoodItems(restoId);
     };
 
     // const deleteFoodItem = async function (id) {

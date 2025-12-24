@@ -15,22 +15,39 @@ const RestaurantLogin = () => {
             setError(false)
         }
         console.log(email, password);
-        let response = await fetch("http://localhost:3000/api/restaurant", {
-            method: 'POST',
-            body: JSON.stringify({ email, password, login: true })
+        let response = await fetch("/api/restaurant", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password, login: true }),
         });
+
         response = await response.json();
+
         if (response.success) {
-            console.log(response);
             const { result } = response;
             delete result.password;
-            localStorage.setItem("restaurantUser", JSON.stringify(result));
-            router.push('/restaurant/dashboard')
-        } else {
-            alert("login failed");
-        }
 
-        
+            localStorage.setItem("restaurantUser", JSON.stringify(result));
+
+            router.replace("/restaurant/dashboard"); // better than push
+            router.refresh(); // force re-render + fresh fetch
+        }
+        // let response = await fetch("http://localhost:3000/api/restaurant", {
+        //     method: 'POST',
+        //     body: JSON.stringify({ email, password, login: true })
+        // });
+        // response = await response.json();
+        // if (response.success) {
+        //     console.log(response);
+        //     const { result } = response;
+        //     delete result.password;
+        //     localStorage.setItem("restaurantUser", JSON.stringify(result));
+        //     router.push('/restaurant/dashboard')
+        // } else {
+        //     alert("login failed");
+        // }
+
+
     }
 
     return (

@@ -20,25 +20,34 @@ import { connectionStr } from '../../../../lib/db';
 //     }
 //     return NextResponse.json({ result, success })
 // }
-export async function GET(request, content) {
-  const id = content.params.id;
-  let success = false;
+export async function GET(request) {
+  try {
+    const pathname = new URL(request.url).pathname;
+    const id = pathname.split("/").filter(Boolean).pop(); // ✅ restaurant id from URL
 
-  await mongoose.connect(connectionStr);
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: "Missing restaurant id in URL" },
+        { status: 400 }
+      );
+    }
 
-  const asObjectId = mongoose.Types.ObjectId.isValid(id)? new mongoose.Types.ObjectId(id): id;
+    await mongoose.connect(connectionStr);
 
-  const result = await foodSchema.find({
-    $or: [
-      { resto_id: asObjectId },
-      { resto_id: id },
-      { restaurant_id: asObjectId },   // supports old data if saved like this
-      { restaurant_id: id },
-    ],
-  });
+    // cast to ObjectId if possible
+    const restoId = mongoose.Types.ObjectId.isValid(id)
+      ? new mongoose.Types.ObjectId(id)
+      : id;
 
-  success = true;
-  return NextResponse.json({ result, success });
+    const result = await foodSchema.find({ resto_id: restoId });
+
+    return NextResponse.json({ success: true, result });
+  } catch (err) {
+    return NextResponse.json(
+      { success: false, message: err.message },
+      { status: 500 }
+    );
+  }
 }
 
 export async function DELETE(request) {

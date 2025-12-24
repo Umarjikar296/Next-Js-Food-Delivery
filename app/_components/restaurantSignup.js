@@ -30,20 +30,38 @@ const RestaurantSignup = () => {
 
 
         console.log(email, password, cpassword, contact, rname, city);
-
-        let response = await fetch("http://localhost:3000/api/restaurant", {
+        
+        let response = await fetch("/api/restaurant", {
             method: "POST",
-            body: JSON.stringify({ email, password, contact, rname, city })
-        })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password, contact, rname, city }),
+        });
+
         response = await response.json();
-        console.log(response);
+
         if (response.success) {
-            console.log(response);
-            const { result } = response
+            const { result } = response;
             delete result.password;
+
             localStorage.setItem("restaurantUser", JSON.stringify(result));
-            router.push('/restaurant/dashboard')
+
+            router.replace("/restaurant/dashboard");
+            router.refresh();
         }
+
+        // let response = await fetch("http://localhost:3000/api/restaurant", {
+        //     method: "POST",
+        //     body: JSON.stringify({ email, password, contact, rname, city })
+        // })
+        // response = await response.json();
+        // console.log(response);
+        // if (response.success) {
+        //     console.log(response);
+        //     const { result } = response
+        //     delete result.password;
+        //     localStorage.setItem("restaurantUser", JSON.stringify(result));
+        //     router.push('/restaurant/dashboard')
+        // }
 
     }
     return (
