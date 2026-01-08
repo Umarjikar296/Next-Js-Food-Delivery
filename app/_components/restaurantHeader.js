@@ -34,12 +34,15 @@ const RestaurantHeader = () => {
             </div>
             <ul>
                 <li><Link href="/">Home</Link></li>
+
                 {
                     details && details.rname ?
                         <>
                             <li><button onClick={logout}>Logout</button></li>
-                            < li ><Link href="/">Profile</Link></li> </> : <li><Link href="/">Login/Signup</Link> </li>
+
+                            < li ><Link href="">Profile</Link></li> </> : <li><Link href="/user-auth">User?</Link></li>
                 }
+
             </ul>
         </div >
     )
