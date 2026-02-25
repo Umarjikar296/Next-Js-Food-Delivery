@@ -2,6 +2,19 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+## Demo Credentials
+Use these accounts to test the app:
+
+- Restaurant
+  - Email: kfc@test.com
+  - Password: 1234
+
+- User
+  - Email: test@test.com
+  - Password: test
+
+> Note: These are demo-only accounts on the staging database. Data may be reset periodically.
+
 First, run the development server:
 
 ```bash
